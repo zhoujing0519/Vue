@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Home from '@/pages/Home'
 import LoveHome from '@/pages/LoveHome'
 import My from '@/pages/My'
 
@@ -9,7 +10,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      component: LoveHome
+      component: Home
     },
     {
       path: '/lovehome',

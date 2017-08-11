@@ -1,10 +1,22 @@
 <template>
   <div class="footer">
     <ul>
-        <li><router-link to="/">Home</router-link></li>
-        <li><router-link to="/lovehome">Lovehome</router-link></li>
-        <li><router-link to="/product">Product</router-link></li>
-        <li><router-link to="/my">My</router-link></li>
+        <li :class="{'active': $route.path == '/'}"><router-link to="/">
+            <span class="iconfont icon-home"></span>
+            <span>Home</span>
+        </router-link></li>
+        <li :class="{'active': $route.path == '/lovehome'}"><router-link to="/lovehome">
+            <span class="iconfont icon-tabulation"></span>
+            <span>Lovehome</span>
+        </router-link></li>
+        <li :class="{'active': $route.path == '/product'}"><router-link to="/product">
+            <span class="iconfont icon-dianpu"></span>
+            <span>Product</span>
+        </router-link></li>
+        <li :class="{'active': $route.path == '/my'}"><router-link to="/my">
+            <span class="iconfont icon-31wode"></span>
+            <span>My</span>
+        </router-link></li>
     </ul>
   </div>
 </template>
