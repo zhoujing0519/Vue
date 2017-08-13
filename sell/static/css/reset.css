@@ -114,7 +114,7 @@ body {
     position: absolute;
     left: 0;
     width: 100%;
-    border-top: 1px solid #eee;
+    border-top: 1px solid rgba(7, 17, 27, .1);
 }
 
 .border-1px::after{
@@ -158,4 +158,66 @@ body {
 .fade-leave-active{
     opacity: 0;
     transition: opacity .5s;
+}
+
+/*move*/
+.move-enter{
+    opacity: 0;
+    transform: translate3d(24px, 0, 0) rotate(180deg);
+}
+
+.move-enter-to{
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(0deg);
+}
+
+.move-leave{
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(0deg);
+}
+
+.move-leave-to{
+    opacity: 0;
+    transform: translate3d(24px, 0, 0) rotate(180deg);
+}
+
+.move-enter-active, .move-leave-active{
+    transition: .4s;
+}
+
+/*drop*/
+.drop-enter{
+    opacity: 0;
+    transform: translate3d(24px, 0, 0) rotate(180deg);
+}
+
+.drop-enter-to{
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(0deg);
+}
+
+.drop-enter-active{
+    transition: .4s cubic-bezier(.49, -.29, .75, .41);
+}
+
+/*fold*/
+.fold-enter{
+    transform: translate3d(0, 0, 0);
+}
+
+.fold-enter-to{
+    transform: translate3d(0, -100%, 0);
+}
+
+.fold-leave{
+    transform: translate3d(0, -100%, 0);
+}
+
+.fold-leave-to{
+    transform: translate3d(0, 0, 0);
+}
+
+.fold-enter-active, .fold-leave-active{
+    transition: .4s;
+    transform: translate3d(0, -100%, 0);
 }
