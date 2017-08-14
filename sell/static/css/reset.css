@@ -221,3 +221,24 @@ body {
     transition: .4s;
     transform: translate3d(0, -100%, 0);
 }
+
+/*从右移入*/
+.slide-enter{
+    transform: translate3d(0, 0, 0);
+}
+
+.slide-enter-to{
+    transform: translate3d(100%, 0, 0);
+}
+
+.slide-leave{
+    transform: translate3d(100%, 0, 0);
+}
+
+.slide-leave-to{
+    transform: translate3d(0, 0, 0);
+}
+
+.slide-enter-active, .slide-leave-active{
+    transition: .4s;
+}

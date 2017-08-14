@@ -14,7 +14,7 @@
                 <li class="food-list food-list-hook" v-for="item in goods">
                     <h3 class="title">{{item.name}}</h3>
                     <ul>
-                        <li class="food-item border-1px" v-for="food in item.foods">
+                        <li class="food-item border-1px" v-for="food in item.foods" @click="selectFoodFn(food, $event)">
                             <div class="icon">
                                 <img :src="food.icon" width="57" height="57" alt="商品图标">
                             </div>
@@ -39,6 +39,9 @@
             </ul>
         </div>
         <cart @add="addFood" :selectFoods="selectFoods" :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></cart>
+        <transition name="slide">
+            <food ref="food" :food="selectedFood"></food>
+        </transition>
     </div>
 </template>
 
@@ -48,6 +51,7 @@
     import BScroll from 'better-scroll';
     import cart from '../cart/cart';
     import cartcontrol from '../cartcontrol/cartcontrol';
+    import food from '../food/food';
 
     const ERR_OK = 0;
 
@@ -64,6 +68,7 @@
                 goods: [],
                 listHeight: [],
                 scrollY: 0,
+                selectedFood: {},
             }
         },
         created(){
@@ -150,10 +155,19 @@
                     this.$refs.cart.drop(target);
                 });
             },
+            selectFoodFn(food, event){
+                if(!event._constructed){
+                    return;
+                }
+
+                this.selectedFood = food;
+                this.$refs.food.show();
+            },
         },
         components: {
             cart,
             cartcontrol,
+            food,
         },
     }
 </script>

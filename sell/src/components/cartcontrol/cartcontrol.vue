@@ -1,10 +1,10 @@
 <template>
     <div id="cartcontrol">
         <transition name="move">
-            <div class="cart-decrease iconfont icon-jian-yuankuang" v-show="food.count > 0" @click="decreaseGoods($event)"></div>
+            <div class="cart-decrease iconfont icon-jian-yuankuang" v-show="food.count > 0" @click.stop.prevent="decreaseGoods($event)"></div>
         </transition>
         <div class="cart-count" v-show="food.count > 0">{{food.count}}</div>
-        <div class="cart-increase iconfont icon-jia-yuankuang" @click="addGoods($event)"></div>
+        <div class="cart-increase iconfont icon-jia-yuankuang" @click.stop.prevent="addGoods($event)"></div>
     </div>
 </template>
 
