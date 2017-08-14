@@ -40,16 +40,14 @@
                                 <span class="username">{{rating.username}}</span>
                                 <img class="avatar" :src="rating.avatar" width="12" height="12" alt="用户头像">
                             </div>
-                            <div class="time">{{rating.rateTime}}</div>
+                            <div class="time">{{rating.rateTime | formatDate}}</div>
                             <p class="text">
                                 <i class="iconfont" :class="showType(rating.rateType)"></i>
                                 {{rating.text}}
                             </p>
                         </li>
                     </ul>
-                    <div class="no-rating" v-show="!food.ratings || !food.ratings.length">
-
-                    </div>
+                    <div class="no-rating" v-show="!food.ratings || !food.ratings.length">暂无评价</div>
                 </div>
             </div>
         </div>
@@ -57,10 +55,12 @@
 </template>
 
 <script>
+    import Vue from 'vue';
     import BScroll from 'better-scroll';
     import cartcontrol from '../cartcontrol/cartcontrol';
     import split from '../split/split';
     import ratingSelect from '../ratingSelect/ratingSelect';
+    import {formatDate} from '../../common/js/date';
 
     const POSITIVE = 0;
     const NEGATIVE = 1;
@@ -89,7 +89,7 @@
             show(){
                 this.showFlag = true;
                 this.selectType = ALL;
-                this.onlyContent = false;
+                this.onlyContent = true;
 
                 this.$nextTick(() => {
                     if(!this.scroll){
@@ -136,6 +136,12 @@
                 this.$nextTick(() => {
                     this.scroll.refresh();
                 });
+            },
+        },
+        filters: {
+            formatDate(time){
+                let date = new Date(time);
+                return formatDate(date, 'yyyy-MM-dd hh:mm');
             },
         },
         components: {
@@ -349,6 +355,12 @@
     }
 
     #food .food-content .rating-wrapper .rating-content .rating-item .text .icon-chaping{
+        color: rgb(147, 153, 159);
+    }
+
+    #food .food-content .rating-wrapper .rating-content .no-rating{
+        padding: 16px 0;
+        font-size: 12px;
         color: rgb(147, 153, 159);
     }
 </style>
