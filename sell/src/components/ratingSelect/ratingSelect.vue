@@ -53,32 +53,18 @@
                 },
             }
         },
-        data(){
-            return {
-                _selectType: 2,
-                _onlyContent: false,
-            }
-        },
-        created(){
-            this._selectType = this.selectType;
-            this._onlyContent = this.onlyContent;
-        },
         methods: {
             select(type, event){
                 if(!event._constructed) return;
-                this._selectType = type;
-                this.selectType = type;
 
                 /*派发事件*/
                 this.$emit('select', type);
             },
             toggleContent(event){
                 if(!event._constructed) return;
-                this.onlyContent = !this.onlyContent;
-                this._onlyContent = !this._onlyContent;
 
                 /*派发事件*/
-                this.$emit('toggleContent', this._onlyContent);
+                this.$emit('toggleContent');
             },
         },
         computed: {

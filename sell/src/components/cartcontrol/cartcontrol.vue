@@ -17,10 +17,6 @@
                 type: Object,
             },
         },
-        created(){
-            // console.log(this.food);
-            // this.$on('add', );
-        },
         methods: {
             addGoods(event){
                 if(!event._constructed){

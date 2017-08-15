@@ -38,15 +38,14 @@
                 </li>
             </ul>
         </div>
-        <cart @add="addFood" :selectFoods="selectFoods" :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></cart>
-        <transition name="slide">
-            <food ref="food" :food="selectedFood"></food>
+        <cart @add="addFood" ref="cart" :selectFoods="selectFoods" :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></cart>
+        <transition name="moveto">
+            <food @add="addFood" ref="food" :food="selectedFood"></food>
         </transition>
     </div>
 </template>
 
 <script>
-    // import Vue from 'vue';
     import axios from 'axios';
     import BScroll from 'better-scroll';
     import cart from '../cart/cart';
@@ -54,8 +53,6 @@
     import food from '../food/food';
 
     const ERR_OK = 0;
-
-    // var eventHub = new Vue();
 
     export default {
         props: {
@@ -147,6 +144,7 @@
                 this.foodsScroll.scrollToElement(el, 300);
             },
             addFood(target){
+                // 接收'加入购物车'DOM
                 this._drop(target);
             },
             _drop(target){

@@ -110,6 +110,7 @@
                 }
 
                 Vue.set(this.food, 'count', 1);
+                this.$emit('add', event.target); // 将'加入购物车'DOM传递出去
             },
             showType(type){
                 return {
@@ -131,8 +132,8 @@
                     this.scroll.refresh();
                 });
             },
-            toggleContentFn(isOnlyContent){
-                this.onlyContent = isOnlyContent;
+            toggleContentFn(){
+                this.onlyContent = !this.onlyContent;
                 this.$nextTick(() => {
                     this.scroll.refresh();
                 });
@@ -162,6 +163,7 @@
         z-index: 30;
         width: 100%;
         background-color: #fff;
+        transform: translate3d(0, 0, 0);
     }
 
     #food .food-content{

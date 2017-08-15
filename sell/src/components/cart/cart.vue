@@ -21,11 +21,17 @@
                 </div>
             </div>
             <div class="ball-container">
-                <transition-group name="drop" tag="div">
-                    <div class="ball-item" v-for="(ball, index) in balls" v-bind:key="index" v-show="ball.show">
-                        <div class="inner inner-hook"></div>
+                    <div class="ball-item" v-for="ball in balls">
+                        <transition
+                            name="drop"
+                            @before-enter="beforeDrop"
+                            @enter="dropping"
+                            @after-enter="afterDrop">
+                            <div class="ball" v-show="ball.show">
+                                <div class="inner inner-hook"></div>
+                            </div>
+                        </transition>
                     </div>
-                </transition-group>
             </div>
             <transition name="fold">
                 <div class="cart-list" v-show="listShow">
@@ -153,6 +159,7 @@
             },
         },
         methods: {
+            // 通过父组件调用, 拿到加入购物车DOM或者加号
             drop(el){
                 for(let i = 0, len = this.balls.length; i < len; i++){
                     let ball = this.balls[i];
@@ -181,43 +188,41 @@
                 if(this.totalPrice < this.minPrice) return;
                 window.alert(`支付${this.totalPrice}元`);
             },
-        },
-        transitions: {
-            drop: {
-                beforeEnter(el){
-                    let count = this.balls.length;
-                    while(count--){
-                        let ball = this.balls[count];
-                        if(ball.show){
-                            let rect = ball.el.getBoundingClientRect();
-                            let x = rect.left - 32;
-                            let y = -(window.innerHeight - rect.top);
+            beforeDrop(el){
+                let count = this.balls.length;
+                while(count--){
+                    let ball = this.balls[count];
+                    if(ball.show){
+                        console.log(ball);
+                        let rect = ball.el.getBoundingClientRect();
+                        let x = rect.left - 32;
+                        let y = -(window.innerHeight - rect.top);
 
-                            el.style.display = '';
-                            el.style['-webkit-transfrom'] = el.style['transfrom'] = `translate3d(0, ${y}px, 0)`;
-
-                            let inner = el.getElementsByClassName('inner-hook')[0];
-                            inner.style['-webkit-transfrom'] = inner.style['transfrom'] = `translate3d(${x}px, 0, 0)`;
-                        }
-                    }
-                },
-                enter(el){
-                    /* eslint-disable no-unused-vars */
-                    let rf = el.offsetHeight;
-                    this.$nextTick(() => {
-                        el.style['-webkit-transfrom'] = el.style['transfrom'] = 'translate3d(0, 0, 0)';
+                        el.style.display = '';
+                        el.style['-webkit-transfrom'] = el.style['transfrom'] = `translate3d(0, ${y}px, 0)`;
 
                         let inner = el.getElementsByClassName('inner-hook')[0];
-                        inner.style['-webkit-transfrom'] = inner.style['transfrom'] = 'translate3d(0, 0, 0)';
-                    });
-                },
-                afterEnter(el){
-                    let ball = this.droppedBalls.shift();
-                    if(ball){
-                        ball.show = false;
-                        el.style.display = 'none';
+                        inner.style['-webkit-transfrom'] = inner.style['transfrom'] = `translate3d(${x}px, 0, 0)`;
                     }
-                },
+                }
+            },
+            dropping(el, done){
+                /* eslint-disable no-unused-vars */
+                let rf = el.offsetHeight;
+                this.$nextTick(() => {
+                    el.style['-webkit-transfrom'] = el.style['transfrom'] = 'translate3d(0, 0, 0)';
+
+                    let inner = el.getElementsByClassName('inner-hook')[0];
+                    inner.style['-webkit-transfrom'] = inner.style['transfrom'] = 'translate3d(0, 0, 0)';
+                    el.addEventListener('transitionend', done);
+                });
+            },
+            afterDrop(el){
+                let ball = this.droppedBalls.shift();
+                if(ball){
+                    ball.show = false;
+                    el.style.display = 'none';
+                }
             },
         },
         components: {

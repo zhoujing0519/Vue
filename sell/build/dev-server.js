@@ -99,8 +99,8 @@ var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsS
 app.use(staticPath, express.static('./static'))
 
 // var uri = 'http://localhost:' + port
-// var uri = 'http://10.9.87.104:' + port
-var uri = 'http://192.168.31.126:' + port
+var uri = 'http://10.9.87.104:' + port
+// var uri = 'http://192.168.31.126:' + port
 
 var _resolve
 var readyPromise = new Promise(resolve => {

@@ -1,5 +1,5 @@
 <template>
-    <div id="seller" v-el:seller>
+    <div id="seller" ref="seller">
         <div class="seller-content">
             <div class="overview">
                 <h1 class="title" v-text="seller.name"></h1>
@@ -28,10 +28,15 @@
                         </div>
                     </li>
                 </ul>
+                <div class="favorite" @click="toggleFavorite($event)">
+                    <i class="iconfont icon-favorite" :class="{'active': favorite}"></i>
+                    <span class="text">{{favoriteText}}</span>
+                </div>
             </div>
-            <!-- <div class="bulletin">
+            <split></split>
+            <div class="bulletin">
                 <h2 class="title">公告与活动</h2>
-                <div class="content-wrapper border-1px">
+                <div class="content-wrapper">
                     <p class="content">{{seller.bulletin}}</p>
                     <ul v-if="seller.supports" class="supports">
                         <li class="support-item border-1px" v-for="(item, index) in seller.supports">
@@ -40,29 +45,52 @@
                         </li>
                     </ul>
                 </div>
-            </div> -->
+            </div>
+            <split></split>
             <div class="pics">
                 <h2 class="title">商家实景</h2>
-                <div class="pic-wrapper" v-el:picWrapper>
-                    <ul class="pic-list" v-el:picList>
+                <div class="pic-wrapper" ref="picWrapper">
+                    <ul class="pic-list" ref="picList">
                         <li class="pic-item" v-for="pic in seller.pics">
                             <img :src="pic" width="120" height="90" alt="商家实景">
                         </li>
                     </ul>
                 </div>
             </div>
+            <split></split>
+            <div class="info">
+                <h2 class="title border-1px">商家信息</h2>
+                <ul>
+                    <li class="info-item border-1px" v-for="info in seller.infos">{{info}}</li>
+                </ul>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+    import BScroll from 'better-scroll';
+    import {saveToLocal, loadFromLocal} from '../../common/js/store';
     import star from '../star/star';
+    import split from '../split/split';
 
     export default {
         props: {
             seller: {
                 type: Object
             }
+        },
+        data(){
+            return {
+                favorite: (() => {
+                    return loadFromLocal(this.seller.id, 'favorite', false);
+                })()
+            }
+        },
+        computed: {
+            favoriteText(){
+                return this.favorite ? '已收藏' : '收藏';
+            },
         },
         created(){
             this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
@@ -80,7 +108,7 @@
         methods: {
             _initScroll(){
                 if(!this.scroll){
-                    this.scroll = new BScroll(this.$els.seller, {
+                    this.scroll = new BScroll(this.$refs.seller, {
                         click: true
                     });
                 }else{
@@ -93,10 +121,10 @@
                     let picWidth = 120;
                     let marginR = 6;
                     let width = (picWidth + marginR) * this.seller.pics.length - marginR;
-                    this.$els.picList.style.width = width + 'px';
+                    this.$refs.picList.style.width = width + 'px';
                     this.$nextTick(() => {
                         if(!this.picScroll){
-                            this.picScroll = new BScroll(this.$els.picWrapper, {
+                            this.picScroll = new BScroll(this.$refs.picWrapper, {
                                 scrollX: true,
                                 eventPassthrough: 'vertical'
                             });
@@ -105,10 +133,17 @@
                         }
                     });
                 }
-            }
+            },
+            toggleFavorite(event){
+                if(!event._constructed) return;
+
+                this.favorite = !this.favorite;
+                saveToLocal(this.seller.id, 'favorite', this.favorite);
+            },
         },
         components: {
-            star
+            star,
+            split,
         }
     }
 </script>
@@ -190,6 +225,33 @@
         font-size: 24px;
     }
 
+    #seller .overview .favorite{
+        position: absolute;
+        right: 11px;
+        top: 18px;
+        text-align: center;
+        width: 40px;
+    }
+
+    #seller .overview .favorite .iconfont{
+        display: block;
+        color: #d4d6d9;
+        background-color: #fff;
+        font-size: 24px;
+        line-height: 1;
+        margin-bottom: 4px;
+    }
+
+    #seller .overview .favorite .iconfont.active{
+        color: rgb(240, 20, 20);
+    }
+
+    #seller .overview .favorite .text{
+        color: rgb(77, 85, 93);
+        font-size: 10px;
+        line-height: 1;
+    }
+
     /*公告*/
     #seller .bulletin{
         padding: 18px;
@@ -204,11 +266,7 @@
     }
 
     #seller .bulletin .content-wrapper{
-        padding: 0 12px 16px 12px;
-    }
-
-    #seller .bulletin .content-wrapper.border-1px::before{
-        display: none;
+        padding: 0 12px;
     }
 
     #seller .bulletin .content-wrapper .content{
@@ -228,12 +286,85 @@
     }
 
     #seller .bulletin .content-wrapper .supports .support-item .text{
+        display: inline-block;
+        vertical-align: top;
         font-size: 12px;
         line-height: 16px;
         color: rgb(7, 17, 27);
     }
 
-/*商家实景..............................................................................................*/
+    #seller .bulletin .content-wrapper .supports .support-item .icon{
+        display: inline-block;
+        vertical-align: top;
+        width: 16px;
+        height: 16px;
+        margin-right: 4px;
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center;
+    }
+
+    /*满减*/
+    #seller .bulletin .content-wrapper .supports .support-item .decrease{
+        background-image: url(./icons/decrease_2@2x.png);
+    }
+
+    /*3x图片*/
+    @media (-webkit-min-device-pixel-ratio: 2), (min-device-pixel-ratio: 2){
+        #seller .bulletin .content-wrapper .supports .support-item .decrease{
+            background-image: url(./icons/decrease_2@3x.png);
+        }
+    }
+
+    /*打折*/
+    #seller .bulletin .content-wrapper .supports .support-item .discount{
+        background-image: url(./icons/discount_2@2x.png);
+    }
+
+    /*3x图片*/
+    @media (-webkit-min-device-pixel-ratio: 2), (min-device-pixel-ratio: 2){
+        #seller .bulletin .content-wrapper .supports .support-item .discount{
+            background-image: url(./icons/discount_2@3x.png);
+        }
+    }
+
+    /*特殊*/
+    #seller .bulletin .content-wrapper .supports .support-item .special{
+        background-image: url(./icons/special_2@2x.png);
+    }
+
+    /*3x图片*/
+    @media (-webkit-min-device-pixel-ratio: 2), (min-device-pixel-ratio: 2){
+        #seller .bulletin .content-wrapper .supports .support-item .special{
+            background-image: url(./icons/special_2@3x.png);
+        }
+    }
+
+    /*票*/
+    #seller .bulletin .content-wrapper .supports .support-item .invoice{
+        background-image: url(./icons/invoice_2@2x.png);
+    }
+
+    /*3x图片*/
+    @media (-webkit-min-device-pixel-ratio: 2), (min-device-pixel-ratio: 2){
+        #seller .bulletin .content-wrapper .supports .support-item .invoice{
+            background-image: url(./icons/invoice_2@3x.png);
+        }
+    }
+
+    /*保*/
+    #seller .bulletin .content-wrapper .supports .support-item .guarantee{
+        background-image: url(./icons/guarantee_2@2x.png);
+    }
+
+    /*3x图片*/
+    @media (-webkit-min-device-pixel-ratio: 2), (min-device-pixel-ratio: 2){
+        #seller .bulletin .content-wrapper .supports .support-item .guarantee{
+            background-image: url(./icons/guarantee_2@3x.png);
+        }
+    }
+
+    /*商家实景..............................................................................................*/
     #seller .pics{
         padding: 18px;
     }
@@ -262,5 +393,32 @@
 
     #seller .pic-wrapper .pic-list .pic-item:last-child{
         margin-right: 0;
+    }
+
+    /*商家信息*/
+    #seller .seller-content .info{
+        padding: 18px 18px 0px 18px;
+        color: rgb(7, 17, 27);
+    }
+
+    #seller .seller-content .info .title{
+        font-size: 14px;
+        line-height: 1;
+        padding-bottom: 12px;
+    }
+
+    #seller .seller-content .info .title.border-1px::before{
+        display: none;
+    }
+
+    #seller .seller-content .info .info-item{
+        padding: 16px 12px;
+        line-height: 16px;
+        font-size: 12px;
+    }
+
+    #seller .seller-content .info .info-item.border-1px:last-child::after,
+    #seller .seller-content .info .info-item.border-1px::before{
+        display: none;
     }
 </style>
