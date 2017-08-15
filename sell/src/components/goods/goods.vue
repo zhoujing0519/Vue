@@ -1,5 +1,6 @@
 <template>
     <div id="goods">
+        <!-- 商品左侧菜单栏 -->
         <div class="menu-wrapper" ref="menuWrapper">
             <ul>
                 <li class="menu-item border-1px" v-for="(item, index) in goods" :class="{'current': currentIndex === index}" @click="selectMenu(index, $event)">
@@ -9,6 +10,7 @@
                 </li>
             </ul>
         </div>
+        <!-- 商品右侧商品列表 -->
         <div class="foods-wrapper" ref="foodsWrapper">
             <ul>
                 <li class="food-list food-list-hook" v-for="item in goods">
@@ -30,7 +32,7 @@
                                     <span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
                                 </div>
                                 <div class="cartcontrol-wrapper">
-                                    <cartcontrol :food="food"></cartcontrol>
+                                    <cartcontrol @add="addFood" :food="food"></cartcontrol>
                                 </div>
                             </div>
                         </li>
@@ -38,10 +40,10 @@
                 </li>
             </ul>
         </div>
-        <cart @add="addFood" ref="cart" :selectFoods="selectFoods" :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></cart>
-        <transition name="moveto">
-            <food @add="addFood" ref="food" :food="selectedFood"></food>
-        </transition>
+        <!-- 商品底部购物车组件 -->
+        <cart ref="cart" :selectFoods="selectFoods" :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></cart>
+        <!-- 商品详情 -->
+        <food @add="addFood" ref="food" :food="selectedFood"></food>
     </div>
 </template>
 

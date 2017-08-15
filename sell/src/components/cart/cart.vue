@@ -1,6 +1,7 @@
 <template>
     <div>
         <div id="cart">
+            <!-- 购物车底部栏 -->
             <div class="content" @click="toggleList">
                 <div class="content-left">
                     <div class="logo-wrapper">
@@ -20,6 +21,7 @@
                     </div>
                 </div>
             </div>
+            <!-- 购物车小球容器 -->
             <div class="ball-container">
                     <div class="ball-item" v-for="ball in balls">
                         <transition
@@ -28,11 +30,12 @@
                             @enter="dropping"
                             @after-enter="afterDrop">
                             <div class="ball" v-show="ball.show">
-                                <div class="inner inner-hook"></div>
+                                <i class="inner inner-hook"></i>
                             </div>
                         </transition>
                     </div>
             </div>
+            <!-- 购物车已选商品列表 -->
             <transition name="fold">
                 <div class="cart-list" v-show="listShow">
                     <div class="list-header clearfix">
@@ -47,7 +50,7 @@
                                     <span>￥{{food.price * food.count}}</span>
                                 </div>
                                 <div class="cartcontrol-wrapper">
-                                    <cartcontrol :food="food"></cartcontrol>
+                                    <cartcontrol @add="addFood" :food="food"></cartcontrol>
                                 </div>
                             </li>
                         </ul>
@@ -55,6 +58,7 @@
                 </div>
             </transition>
         </div>
+        <!-- 购物车虚化背景 -->
         <transition name="fade">
             <div id="list-mark" v-show="listShow" @click="hideList"></div>
         </transition>
@@ -159,6 +163,9 @@
             },
         },
         methods: {
+            addFood(target){
+                this.drop(target);
+            },
             // 通过父组件调用, 拿到加入购物车DOM或者加号
             drop(el){
                 for(let i = 0, len = this.balls.length; i < len; i++){
@@ -193,16 +200,19 @@
                 while(count--){
                     let ball = this.balls[count];
                     if(ball.show){
-                        console.log(ball);
                         let rect = ball.el.getBoundingClientRect();
-                        let x = rect.left - 32;
-                        let y = -(window.innerHeight - rect.top);
+                        // let x = rect.left - 32;
+                        let x = rect.left - 16;
+                        // let y = -(window.innerHeight - rect.top);
+                        let y = (window.innerHeight - rect.top) - 16;
 
                         el.style.display = '';
-                        el.style['-webkit-transfrom'] = el.style['transfrom'] = `translate3d(0, ${y}px, 0)`;
+                        // el.style['-webkit-transform'] = el.style['transform'] = `translate3d(0, ${y}px, 0)`;
+                        el.style.left = `${x}px`;
+                        el.style.bottom = `${y}px`;
 
                         let inner = el.getElementsByClassName('inner-hook')[0];
-                        inner.style['-webkit-transfrom'] = inner.style['transfrom'] = `translate3d(${x}px, 0, 0)`;
+                        inner.style['-webkit-transform'] = inner.style['transform'] = `translate3d(${x}px, 0, 0)`;
                     }
                 }
             },
@@ -210,10 +220,13 @@
                 /* eslint-disable no-unused-vars */
                 let rf = el.offsetHeight;
                 this.$nextTick(() => {
-                    el.style['-webkit-transfrom'] = el.style['transfrom'] = 'translate3d(0, 0, 0)';
+                    // el.style['-webkit-transform'] = el.style['transform'] = 'translate3d(0, 0, 0)';
+
+                    el.style.left = '32px';
+                    el.style.bottom = '22px';
 
                     let inner = el.getElementsByClassName('inner-hook')[0];
-                    inner.style['-webkit-transfrom'] = inner.style['transfrom'] = 'translate3d(0, 0, 0)';
+                    inner.style['-webkit-transform'] = inner.style['transform'] = 'translate3d(0, 0, 0)';
                     el.addEventListener('transitionend', done);
                 });
             },
@@ -350,14 +363,22 @@
     }
 
     /*小球*/
-    #cart .ball-container .ball-item{
+    /*#cart .ball-container .ball-item{
+        position: fixed;
+        left: 32px;
+        bottom: 22px;
+        z-index: 200;
+    }*/
+
+    #cart .ball-container .ball-item .ball{
         position: fixed;
         left: 32px;
         bottom: 22px;
         z-index: 200;
     }
 
-    #cart .ball-container .ball-item .inner{
+    #cart .ball-container .ball-item .ball .inner{
+        display: inline-block;
         width: 16px;
         height: 16px;
         border-radius: 50%;
@@ -371,6 +392,7 @@
         top: 0;
         z-index: -1;
         width: 100%;
+        max-height: 251px;
         background-color: #fff;
         transform: translate3d(0, -100%, 0);
     }
@@ -397,7 +419,7 @@
     }
 
     #cart .cart-list .list-content{
-        max-height: 217px;
+        max-height: 210px;
         padding: 0 18px;
         box-sizing: border-box;
         overflow: hidden;

@@ -142,7 +142,7 @@ body {
 }
 /*1像素边框 end*/
 
-/*transition*/
+/*弹窗渐隐*/
 .fade-enter, .fade-leave-active{
     opacity: 0;
     background-color: rgba(7, 17, 27, 0);
@@ -152,7 +152,7 @@ body {
     transition: .5s;
 }
 
-/*move*/
+/*购物车控制器*/
 .move-enter{
     opacity: 0;
     transform: translate3d(24px, 0, 0) rotate(180deg);
@@ -177,63 +177,35 @@ body {
     transition: .4s;
 }
 
-/*drop*/
-.drop-enter{
-    opacity: 0;
-    transform: translate3d(24px, 0, 0) rotate(180deg);
-}
-
-.drop-enter-to{
-    opacity: 1;
-    transform: translate3d(0, 0, 0) rotate(0deg);
-}
-
+/*小球抛物线*/
 .drop-enter-active{
-    transition: .4s cubic-bezier(.49, -.29, .75, .41);
+    transition:
+        bottom .5s cubic-bezier(.49, -.29, .75, .41),
+        left .5s linear;
 }
 
-/*fold*/
-.fold-enter{
-    transform: translate3d(0, 0, 0);
+/*购物车列表折叠*/
+.fold-enter, .fold-leave-to{
+    transform: translate3d(0, 0, 0)!important;
 }
 
-.fold-enter-to{
-    transform: translate3d(0, -100%, 0);
-}
-
-.fold-leave{
-    transform: translate3d(0, -100%, 0);
-}
-
-.fold-leave-to{
-    transform: translate3d(0, 0, 0);
+.fold-enter-to, .fold-leave{
+    transform: translate3d(0, -100%, 0)!important;
 }
 
 .fold-enter-active, .fold-leave-active{
-    transition: .4s;
-    transform: translate3d(0, -100%, 0);
+    transition: .5s;
 }
 
-/*从右移入*/
-.moveto-enter{
+/*商品详情移入*/
+.page-enter, .page-leave-to{
     transform: translate3d(100%, 0, 0);
 }
 
-.moveto-enter-to{
-    transform: translate3d(0, 0, 0);
-    transition: 5s;
-}
-
-.moveto-leave{
+.page-enter-to, .page-leave{
     transform: translate3d(0, 0, 0);
 }
 
-.moveto-leave-to{
-    transform: translate3d(100%, 0, 0);
-    transition: 5s;
-}
-
-.moveto-enter-active, .moveto-leave-active{
-    transition: 5s;
-    transform: translate3d(0, 0, 0);
+.page-enter-active, .page-leave-active{
+    transition: .5s;
 }

@@ -1,57 +1,59 @@
 <template>
-    <div id="food" v-show="showFlag" ref="food">
-        <div class="food-content">
-            <div class="image-header">
-                <img :src="food.image" alt="产品大图">
-                <div class="back">
-                    <i class="iconfont icon-iconfontfanhui" @click="hide"></i>
+    <transition name="page">
+        <div id="food" v-show="showFlag" ref="food">
+            <div class="food-content">
+                <div class="image-header">
+                    <img :src="food.image" alt="产品大图">
+                    <div class="back">
+                        <i class="iconfont icon-iconfontfanhui" @click="hide"></i>
+                    </div>
                 </div>
-            </div>
-            <div class="content">
-                <h2 class="title">{{food.name}}</h2>
-                <div class="detail">
-                    <span class="sell-count">月售{{food.sellCount}}份</span>
-                    <span class="rating">好评率{{food.rating}}%</span>
+                <div class="content">
+                    <h2 class="title">{{food.name}}</h2>
+                    <div class="detail">
+                        <span class="sell-count">月售{{food.sellCount}}份</span>
+                        <span class="rating">好评率{{food.rating}}%</span>
+                    </div>
+                    <div class="price">
+                        <span class="now">￥{{food.price}}</span>
+                        <span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
+                    </div>
+                    <div class="cartcontrol-wrapper">
+                        <cartcontrol @add="addGoods" :food="food"></cartcontrol>
+                    </div>
+                    <transition name="fade">
+                        <div class="buy" v-show="!food.count || food.count === 0" @click.stop.prevent="addFirst($event)">加入购物车</div>
+                    </transition>
                 </div>
-                <div class="price">
-                    <span class="now">￥{{food.price}}</span>
-                    <span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
+                <split></split>
+                <div class="info">
+                    <h2 class="title">商品信息</h2>
+                    <p class="text" v-show="food.info">{{food.info}}</p>
                 </div>
-                <div class="cartcontrol-wrapper">
-                    <cartcontrol :food="food"></cartcontrol>
-                </div>
-                <transition name="fade">
-                    <div class="buy" v-show="!food.count || food.count === 0" @click.stop.prevent="addFirst($event)">加入购物车</div>
-                </transition>
-            </div>
-            <split></split>
-            <div class="info">
-                <h2 class="title">商品信息</h2>
-                <p class="text" v-show="food.info">{{food.info}}</p>
-            </div>
-            <split></split>
-            <div class="rating-wrapper">
-                <h2 class="title">商品评价</h2>
-                <ratingSelect @select="ratingSelectFn" @toggleContent="toggleContentFn" :selectType="selectType" :onlyContent="onlyContent" :desc="desc" :ratings="food.ratings"></ratingSelect>
-                <div class="rating-content">
-                    <ul class="" v-show="food.ratings && food.ratings.length">
-                        <li class="rating-item border-1px" v-for="rating in food.ratings" v-show="needShow(rating.rateType, rating.text)">
-                            <div class="user">
-                                <span class="username">{{rating.username}}</span>
-                                <img class="avatar" :src="rating.avatar" width="12" height="12" alt="用户头像">
-                            </div>
-                            <div class="time">{{rating.rateTime | formatDate}}</div>
-                            <p class="text">
-                                <i class="iconfont" :class="showType(rating.rateType)"></i>
-                                {{rating.text}}
-                            </p>
-                        </li>
-                    </ul>
-                    <div class="no-rating" v-show="!food.ratings || !food.ratings.length">暂无评价</div>
+                <split></split>
+                <div class="rating-wrapper">
+                    <h2 class="title">商品评价</h2>
+                    <ratingSelect @select="ratingSelectFn" @toggleContent="toggleContentFn" :selectType="selectType" :onlyContent="onlyContent" :desc="desc" :ratings="food.ratings"></ratingSelect>
+                    <div class="rating-content">
+                        <ul class="" v-show="food.ratings && food.ratings.length">
+                            <li class="rating-item border-1px" v-for="rating in food.ratings" v-show="needShow(rating.rateType, rating.text)">
+                                <div class="user">
+                                    <span class="username">{{rating.username}}</span>
+                                    <img class="avatar" :src="rating.avatar" width="12" height="12" alt="用户头像">
+                                </div>
+                                <div class="time">{{rating.rateTime | formatDate}}</div>
+                                <p class="text">
+                                    <i class="iconfont" :class="showType(rating.rateType)"></i>
+                                    {{rating.text}}
+                                </p>
+                            </li>
+                        </ul>
+                        <div class="no-rating" v-show="!food.ratings || !food.ratings.length">暂无评价</div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </transition>
 </template>
 
 <script>
@@ -112,6 +114,9 @@
                 Vue.set(this.food, 'count', 1);
                 this.$emit('add', event.target); // 将'加入购物车'DOM传递出去
             },
+            addGoods(target){
+                this.$emit('add', target);
+            },
             showType(type){
                 return {
                     'icon-haoping': type === POSITIVE,
@@ -163,7 +168,6 @@
         z-index: 30;
         width: 100%;
         background-color: #fff;
-        transform: translate3d(0, 0, 0);
     }
 
     #food .food-content{
