@@ -4,36 +4,21 @@
         <router-view></router-view>
     </transition>
     <!-- 底部通栏 -->
-    <bottom></bottom>
+    <v-footer></v-footer>
   </div>
 </template>
 
 <script>
-import Bottom from './components/Bottom'
+import Footer from './components/Footer/Footer'
 
 export default {
   name: 'app',
   components: {
-      Bottom
+      'v-footer': Footer
   },
 }
 </script>
 
 <style>
-.fade-enter{
-    opacity: 0;
-}
 
-.fade-enter-active{
-    transition: opacity .5s;
-}
-
-.fade-leave{
-    opacity: 1;
-}
-
-.fade-leave-active{
-    opacity: 0;
-    transition: opacity .5s;
-}
 </style>
