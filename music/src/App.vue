@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" @touchmove.prevent="onTouchMoveFn">
     <m-header></m-header>
     <tab></tab>
     <keep-alive>
@@ -14,6 +14,9 @@ import MHeader from 'components/m-header/m-header'
 
 export default {
     name: 'app',
+    methods: {
+        onTouchMoveFn(){},
+    },
     components: {
         Tab,
         MHeader,
