@@ -1,13 +1,24 @@
 <template>
     <transition name="slide">
         <div class="singer-detail">
-
+            <img :src="singer.avatar">
         </div>
     </transition>
 </template>
 
 <script type="text/ecmascript-6">
+    import {mapGetters} from 'vuex'
 
+    export default {
+        computed: {
+            ...mapGetters([
+                'singer',
+            ])
+        },
+        created(){
+            
+        },
+    }
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">

@@ -8,10 +8,11 @@
 </template>
 
 <script>
-    import {getSingerList} from 'api/singer';
-    import {ERR_OK} from 'api/config';
-    import Singer from 'common/js/singer';
-    import ListView from 'base/listview/listview';
+    import {getSingerList} from 'api/singer'
+    import {ERR_OK} from 'api/config'
+    import Singer from 'common/js/singer'
+    import ListView from 'base/listview/listview'
+    import {mapMutations} from 'vuex'
 
     const HOT_NAME = '热门';
     const HOT_SINGER_LEN = 10;
@@ -30,6 +31,7 @@
                 this.$router.push({
                     path: `/singer/${singer.id}`,
                 });
+                this.setSinger(singer);
             },
             _getSingerList(){
                 getSingerList().then((res) => {
@@ -86,6 +88,9 @@
 
                 return hot.concat(ret);
             },
+            ...mapMutations({
+                setSinger: 'SET_SINGER'
+            })
         },
         components: {
             ListView,
