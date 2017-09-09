@@ -27,15 +27,15 @@
                 </div>
                 <div class="bottom">
                     <div class="progress-wrapper">
-                        <span class="time time-l"></span>
+                        <span class="time time-l">{{format(currentTime)}}</span>
                         <div class="progress-bar-wrapper">
-
+                            <progress-bar :percent="percent" @percentChange="onProgressBarChange"></progress-bar>
                         </div>
-                        <span class="time time-r"></span>
+                        <span class="time time-r">{{format(currentSong.duration)}}</span>
                     </div>
                     <div class="operators">
                         <div class="icon i-left">
-                            <i class="icon-sequence"></i>
+                            <i :class="iconMode" @click="changeMode"></i>
                         </div>
                         <div class="icon i-left" :class="disableCls">
                             <i class="icon-prev" @click="prev"></i>
@@ -63,7 +63,9 @@
                     <p class="desc" v-html="currentSong.singer"></p>
                 </div>
                 <div class="control">
-                    <i :class="playIconMini" @click.stop="togglePlaying"></i>
+                    <progress-circle :radius="radius" :percent="percent">
+                        <i class="icon-mini" :class="playIconMini" @click.stop="togglePlaying"></i>
+                    </progress-circle>
                 </div>
                 <div class="control">
                     <i class="icon-playlist"></i>
@@ -78,14 +80,19 @@
     import {mapGetters, mapMutations} from 'vuex'
     import animations from 'create-keyframe-animation'
     import {prefixStyle} from 'common/js/dom'
+    import {playMode} from 'common/js/config'
+    import ProgressBar from 'base/progress-bar/progress-bar'
+    import ProgressCircle from 'base/progress-circle/progress-circle'
 
     const transform = prefixStyle('transform');
+    const progressCircleRadius = 32;
 
     export default {
         data(){
             return {
                 songReady: false,
                 currentTime: 0,
+                radius: 32,
             }
         },
         computed: {
@@ -95,11 +102,17 @@
             playIconMini(){
                 return this.playing ? 'icon-pause-mini' : 'icon-play-mini';
             },
+            iconMode(){
+                return this.mode === playMode.sequence ? 'icon-sequence' : this.mode === playMode.loop ? 'icon-loop' : 'icon-random';
+            },
             cdCls(){
                 return this.playing ? 'play' : 'play pause';
             },
             disableCls(){
                 return this.songReady ? '' : 'disabled';
+            },
+            percent(){
+                return this.currentTime / this.currentSong.duration;
             },
             ...mapGetters([
                 'fullscreen',
@@ -107,6 +120,7 @@
                 'currentSong',
                 'playing',
                 'currentIndex',
+                'mode',
             ])
         },
         methods: {
@@ -170,6 +184,10 @@
                 const y = window.innerHeight - paddingTop - (width / 2) - paddingBottom;
                 return {x, y, scale};
             },
+            changeMode(){ // 切换模式
+                const mode = (this.mode + 1) % 3;
+                this.setPlayMode(mode);
+            },
             togglePlaying(){ // 音乐开关
                 this.setPlayingState(!this.playing);
             },
@@ -195,13 +213,32 @@
             error(){ // 音频加载失败
                 this.songReady = true;
             },
-            updateTime(e){
+            updateTime(e){ // 更新音频时间
                 this.currentTime = e.target.currentTime;
+            },
+            format(interval){ // 格式化音频时间
+                interval = interval | 0;
+                const minute = interval / 60 | 0;
+                const second = this._pad(interval % 60);
+                return `${minute}:${second}`;
+            },
+            onProgressBarChange(percent){ // 播放器进度变化
+                this.$refs.audio.currentTime = this.currentSong.duration * percent;
+                if(!this.playing) this.togglePlaying();
+            },
+            _pad(num, n = 2){
+                let len = num.toString().length;
+                while(len < n){
+                    num = '0' + num;
+                    len++;
+                }
+                return num;
             },
             ...mapMutations({
                 setFullScreen: 'SET_FULL_SCREEN',
                 setPlayingState: 'SET_PLAYING_STATE',
                 setCurrentIndex: 'SET_CURRENT_INDEX',
+                setPlayMode: 'SET_PLAY_MODE',
             })
         },
         watch: {
@@ -216,6 +253,10 @@
                     newVal ? audio.play() : audio.pause();
                 });
             },
+        },
+        components: {
+            ProgressBar,
+            ProgressCircle,
         },
     }
 </script>
