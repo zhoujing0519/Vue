@@ -111,6 +111,8 @@
 
     const transform = prefixStyle('transform');
     const transitionDuration = prefixStyle('transitionDuration');
+    const animation = prefixStyle('animation');
+    const transition = prefixStyle('transition');
     const progressCircleRadius = 32;
 
     export default {
@@ -195,16 +197,16 @@
             },
             afterEnter(){
                 animations.unregisterAnimation('move');
-                this.$refs.cdWrapper.style.animation = '';
+                this.$refs.cdWrapper.style[animation] = '';
             },
             leave(el, done){
                 const {x, y, scale} = this._getPosAndScale();
-                this.$refs.cdWrapper.style.transition = '.4s';
+                this.$refs.cdWrapper.style[transition] = '.4s';
                 this.$refs.cdWrapper.style[transform] = `translate3d(${x}px, ${y}px, 0) scale(${scale})`;
                 this.$refs.cdWrapper.addEventListener('transitionend', done);
             },
             afterLeave(){
-                this.$refs.cdWrapper.style.transition = '';
+                this.$refs.cdWrapper.style[transition] = '';
                 this.$refs.cdWrapper.style[transform] = '';
             },
             _getPosAndScale(){
