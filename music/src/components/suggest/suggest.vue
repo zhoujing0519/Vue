@@ -1,5 +1,12 @@
 <template>
-    <scroll class="suggest" :data="result" :pullup="pullup" @scrollToEnd="searchMore" ref="suggest">
+    <scroll
+        class="suggest"
+        :data="result"
+        :pullup="pullup"
+        :beforeScroll="beforeScroll"
+        @scrollToEnd="searchMore"
+        @beforeScroll="listScroll"
+        ref="suggest">
         <ul class="suggest-list">
             <li class="suggest-item" v-for="item in result" @click="selectItem(item)">
                 <div class="icon">
@@ -11,8 +18,8 @@
             </li>
             <loading v-show="hasMore"></loading>
         </ul>
-        <div class="no-result-wrapper" v-show="!result.length">
-
+        <div class="no-result-wrapper" v-show="!result.length && !hasMore">
+            <no-result title="抱歉，暂无搜索结果"></no-result>
         </div>
     </scroll>
 </template>
@@ -20,6 +27,7 @@
 <script type="text/ecmascript-6">
     import Scroll from 'base/scroll/scroll'
     import Loading from 'base/loading/loading'
+    import NoResult from 'base/no-result/no-result'
 
     import {search} from 'api/search'
     import {ERR_OK} from 'api/config'
@@ -47,6 +55,7 @@
                 page: 1,
                 result: [],
                 pullup: true,
+                beforeScroll: true,
                 hasMore: true,
             }
         },
@@ -93,6 +102,13 @@
                 }else{ // 点击歌曲
                     this.insertSong(item)
                 }
+                this.$emit('select')
+            },
+            listScroll(){
+                this.$emit('listScroll')
+            },
+            refresh(){
+                this.$refs.suggest.refresh();
             },
             _checkMore(data){
                 const song = data.song
@@ -132,6 +148,7 @@
         components: {
             Scroll,
             Loading,
+            NoResult,
         },
     }
 </script>

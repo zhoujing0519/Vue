@@ -3,6 +3,7 @@
 import * as types from './mutation-types'
 
 const mutations = {
+    // 数据
     [types.SET_SINGER](state, singer){
         state.singer = singer;
     },
@@ -12,6 +13,8 @@ const mutations = {
     [types.SET_TOP_LIST](state, topList){
         state.topList = topList;
     },
+
+    // 播放器
     [types.SET_PLAYING_STATE](state, flag){
         state.playing = flag;
     },
@@ -29,6 +32,11 @@ const mutations = {
     },
     [types.SET_CURRENT_INDEX](state, index){
         state.currentIndex = index;
+    },
+
+    // 搜索
+    [types.SET_SEARCH_HISTORY](state, history){
+        state.searchHistory = history;
     },
 }
 
