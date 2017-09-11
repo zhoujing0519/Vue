@@ -1,6 +1,8 @@
 // 根据state的不同值，进行映射
 
 export const singer = state => state.singer
+export const disc = state => state.disc
+export const topList = state => state.topList
 export const playing = state => state.playing
 export const fullscreen = state => state.fullscreen
 export const playlist = state => state.playlist
