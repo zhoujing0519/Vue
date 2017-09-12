@@ -84,11 +84,12 @@
                         <i class="icon-mini" :class="playIconMini" @click.stop="togglePlaying"></i>
                     </progress-circle>
                 </div>
-                <div class="control">
+                <div class="control" @click.stop="showPlaylist">
                     <i class="icon-playlist"></i>
                 </div>
             </div>
         </transition>
+        <playlist ref="playlist"></playlist>
         <audio :src="currentSong.url" ref="audio" @canplay="ready" @error="error" @timeupdate="updateTime" @ended="end"></audio>
     </div>
 </template>
@@ -99,15 +100,17 @@
     import Lyric from 'lyric-parser'
 
     // Methods
-    import {mapGetters, mapMutations} from 'vuex'
+    import {mapGetters, mapMutations, mapActions} from 'vuex'
     import {prefixStyle} from 'common/js/dom'
     import {shuffle} from 'common/js/util'
     import {playMode} from 'common/js/config'
+    import {playerMixin} from 'common/js/mixin'
 
     // Components
     import ProgressBar from 'base/progress-bar/progress-bar'
     import ProgressCircle from 'base/progress-circle/progress-circle'
     import Scroll from 'base/scroll/scroll'
+    import Playlist from 'components/playlist/playlist'
 
     const transform = prefixStyle('transform');
     const transitionDuration = prefixStyle('transitionDuration');
@@ -116,6 +119,7 @@
     const progressCircleRadius = 32;
 
     export default {
+        mixins: [playerMixin],
         data(){
             return {
                 songReady: false,
@@ -137,9 +141,6 @@
             playIconMini(){
                 return this.playing ? 'icon-pause-mini' : 'icon-play-mini';
             },
-            iconMode(){
-                return this.mode === playMode.sequence ? 'icon-sequence' : this.mode === playMode.loop ? 'icon-loop' : 'icon-random';
-            },
             cdCls(){
                 return this.playing ? 'play' : 'play pause';
             },
@@ -151,12 +152,8 @@
             },
             ...mapGetters([
                 'fullscreen',
-                'playlist',
-                'currentSong',
                 'playing',
                 'currentIndex',
-                'mode',
-                'sequenceList',
             ])
         },
         methods: {
@@ -175,13 +172,16 @@
                 const {x, y, scale} = this._getPosAndScale();
                 let animation = {
                     0: {
-                        transform: `translate3d(${x}px, ${y}px, 0) scale(${scale})`
+                        transform: `translate3d(${x}px, ${y}px, 0) scale(${scale})`,
+                        'webkitTransform': `translate3d(${x}px, ${y}px, 0) scale(${scale})`,
                     },
                     60: {
-                        transform: 'translate3d(0, 0, 0) scale(1.1)'
+                        transform: 'translate3d(0, 0, 0) scale(1.1)',
+                        'webkitTransform': 'translate3d(0, 0, 0) scale(1.1)',
                     },
                     100: {
-                        transform: 'translate3d(0, 0, 0) scale(1)'
+                        transform: 'translate3d(0, 0, 0) scale(1)',
+                        'webkitTransform': 'translate3d(0, 0, 0) scale(1)',
                     }
                 };
 
@@ -281,6 +281,7 @@
             },
             ready(){ // 音频加载
                 this.songReady = true;
+                this.savePlayHistory(this.currentSong);
             },
             error(){ // 音频加载失败
                 this.songReady = true;
@@ -376,6 +377,9 @@
                 this.$refs.middleL.style[transitionDuration] = `${time}ms`;
                 this.touch.percent = null;
             },
+            showPlaylist(){
+                this.$refs.playlist.show()
+            },
             _pad(num, n = 2){
                 let len = num.toString().length;
                 while(len < n){
@@ -386,14 +390,15 @@
             },
             ...mapMutations({
                 setFullScreen: 'SET_FULL_SCREEN',
-                setPlayingState: 'SET_PLAYING_STATE',
-                setCurrentIndex: 'SET_CURRENT_INDEX',
-                setPlayMode: 'SET_PLAY_MODE',
-                setPlayList: 'SET_PLAYLIST',
-            })
+            }),
+            ...mapActions([
+                'savePlayHistory',
+            ]),
         },
         watch: {
             currentSong(newSong, oldSong){
+                // 如果没有新歌，不做操作
+                if(!newSong.id) return
                 // 如果新歌与老歌为同一首，不做操作
                 if(newSong.id === oldSong.id) return;
                 // 如果歌曲发生变化，将上一首歌曲的歌词计时器停止
@@ -416,6 +421,7 @@
             ProgressBar,
             ProgressCircle,
             Scroll,
+            Playlist,
         },
     }
 </script>
