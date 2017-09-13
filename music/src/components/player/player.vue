@@ -90,7 +90,7 @@
             </div>
         </transition>
         <playlist ref="playlist"></playlist>
-        <audio :src="currentSong.url" ref="audio" @canplay="ready" @error="error" @timeupdate="updateTime" @ended="end"></audio>
+        <audio :src="currentSong.url" ref="audio" @play="ready" @error="error" @timeupdate="updateTime" @ended="end"></audio>
     </div>
 </template>
 
@@ -253,12 +253,14 @@
             loop(){
                 this.$refs.audio.currentTime = 0;
                 this.$refs.audio.play();
+                if(!this.playing) this.togglePlaying();
                 if(this.currentLyric) this.currentLyric.seek(0);
             },
             next(){ // 下一首
                 if(!this.songReady) return;
                 if(this.playlist.length === 1){
                     this.loop();
+                    return
                 }else{
                     let index = this.currentIndex + 1;
                     if(index === this.playlist.length) index = 0;
@@ -271,6 +273,7 @@
                 if(!this.songReady) return;
                 if(this.playlist.length === 1){
                     this.loop();
+                    return
                 }else{
                     let index = this.currentIndex - 1;
                     if(index === -1) index = this.playlist.length - 1;
@@ -303,6 +306,7 @@
             },
             getLyric(){
                 this.currentSong.getLyric().then((lyric) => {
+                    if(this.currentSong.lyric !== lyric) return // 当当前歌词与获取到的歌词不一致时，返回
                     this.currentLyric = new Lyric(lyric, this.handleLyric);
                     if(this.playing) this.currentLyric.play();
                 }).catch((err) => {
@@ -402,8 +406,16 @@
                 // 如果新歌与老歌为同一首，不做操作
                 if(newSong.id === oldSong.id) return;
                 // 如果歌曲发生变化，将上一首歌曲的歌词计时器停止
-                if(this.currentLyric) this.currentLyric.stop();
-                setTimeout(() => {
+                if(this.currentLyric){
+                     this.currentLyric.stop();
+                     this.currentTime = 0
+                     this.playingLyric = ''
+                     this.currentLineNum = 0
+                }
+
+                // 延迟目的是为了手机从后台切回前台时，能够正常触发音频播放
+                if(this.timer) clearTimeout(this.timer)
+                this.timer = setTimeout(() => {
                     // 下一首歌曲播放
                     this.$refs.audio.play();
                     // 获取歌词

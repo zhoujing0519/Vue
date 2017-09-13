@@ -6,10 +6,10 @@ import router from './router'
 import store from './store'
 import fastclick from 'fastclick'
 import VueLazyLoad from 'vue-lazyload'
+import 'common/stylus/index.styl'
+// import vConsole from 'vconsole'
 
 Vue.config.productionTip = false
-
-import 'common/stylus/index.styl'
 
 fastclick.attach(document.body)
 
