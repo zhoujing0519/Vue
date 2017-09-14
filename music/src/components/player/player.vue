@@ -102,7 +102,6 @@
     // Methods
     import {mapGetters, mapMutations, mapActions} from 'vuex'
     import {prefixStyle} from 'common/js/dom'
-    import {shuffle} from 'common/js/util'
     import {playMode} from 'common/js/config'
     import {playerMixin} from 'common/js/mixin'
 
@@ -116,7 +115,6 @@
     const transitionDuration = prefixStyle('transitionDuration');
     const animation = prefixStyle('animation');
     const transition = prefixStyle('transition');
-    const progressCircleRadius = 32;
 
     export default {
         mixins: [playerMixin],
@@ -172,16 +170,13 @@
                 const {x, y, scale} = this._getPosAndScale();
                 let animation = {
                     0: {
-                        transform: `translate3d(${x}px, ${y}px, 0) scale(${scale})`,
-                        'webkitTransform': `translate3d(${x}px, ${y}px, 0) scale(${scale})`,
+                        transform: `translate3d(${x}px, ${y}px, 0) scale(${scale})`
                     },
                     60: {
-                        transform: 'translate3d(0, 0, 0) scale(1.1)',
-                        'webkitTransform': 'translate3d(0, 0, 0) scale(1.1)',
+                        transform: 'translate3d(0, 0, 0) scale(1.1)'
                     },
                     100: {
-                        transform: 'translate3d(0, 0, 0) scale(1)',
-                        'webkitTransform': 'translate3d(0, 0, 0) scale(1)',
+                        transform: 'translate3d(0, 0, 0) scale(1)'
                     }
                 };
 
@@ -327,6 +322,8 @@
             },
             middleTouchStart(e){
                 this.touch.initiated = true;
+                // 用来判断是否是一次移动
+                this.touch.moved = false
                 const touch = e.touches[0];
                 this.touch.startX = touch.pageX;
                 this.touch.startY = touch.pageY;
@@ -339,6 +336,7 @@
 
                 // 如果在纵轴的滚动偏差大于横向滚动偏差，则视为scroll，不操作
                 if(Math.abs(deltaY) > Math.abs(deltaX)) return;
+                if(!this.touch.moved) this.touch.moved = true
 
                 const left = this.currentShow === 'cd' ? 0 : - window.innerWidth;
                 const offsetWidth = Math.min(0, Math.max(- window.innerWidth, left + deltaX));
@@ -350,7 +348,7 @@
                 this.$refs.middleL.style[transitionDuration] = 0;
             },
             middleTouchEnd(){
-                this.touch.initiated = false;
+                if(!this.touch.moved) return
                 if(!this.touch.percent) return;
                 let offsetWidth;
                 let opacity;
@@ -358,20 +356,20 @@
                     if(this.touch.percent > 0.1){
                          offsetWidth = - window.innerWidth;
                          opacity = 0;
+                         this.currentShow = 'lyric';
                     }else{
                         offsetWidth = 0;
                         opacity = 1;
                     }
-                    this.currentShow = 'lyric';
                 }else{
                     if(this.touch.percent < 0.9){
                          offsetWidth = 0;
                          opacity = 1;
+                         this.currentShow = 'cd';
                     }else{
                         offsetWidth = - window.innerWidth;
                         opacity = 0;
                     }
-                    this.currentShow = 'cd';
                 }
 
                 const time = 300;
@@ -380,6 +378,7 @@
                 this.$refs.middleL.style.opacity = opacity;
                 this.$refs.middleL.style[transitionDuration] = `${time}ms`;
                 this.touch.percent = null;
+                this.touch.initiated = false;
             },
             showPlaylist(){
                 this.$refs.playlist.show()
@@ -427,6 +426,13 @@
                 this.$nextTick(() => {
                     newVal ? audio.play() : audio.pause();
                 });
+            },
+            fullscreen(newVal){
+                if(newVal){
+                    setTimeout(() => {
+                        this.$refs.lyricList.refresh()
+                    }, 20)
+                }
             },
         },
         components: {
