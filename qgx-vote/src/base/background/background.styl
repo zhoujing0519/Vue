@@ -1,0 +1,42 @@
+@import '~common/stylus/variable'
+
+.background
+    position: absolute
+    left: 0
+    top: 0
+    right: 0
+    bottom: 50px
+    overflow: hidden
+    background-color: $color-background-f
+    background-image: url(bg.png)
+    background-size: 100% auto
+    background-repeat: no-repeat
+    .title
+        position: absolute
+        top: 20px
+        left: 63px
+        right: 63px
+        height: 52px
+        text-align: center
+        line-height: 52px
+        color: $color-theme
+        font-size: $font-size-medium-x
+        font-weight: bold
+        background: $color-background-f
+        border-radius: 6px
+        box-shadow: 4px 10px 20px $color-shadow,
+                    -4px 10px 20px $color-shadow
+        z-index: 60
+    .container
+        position: absolute
+        left: 15px
+        top: 46px
+        right: 15px
+        bottom: 15px
+        padding: 45px 15px 15px
+        box-sizing: border-box
+        background: $color-background-f
+        border-radius: 6px
+        box-shadow: 4px 4px 20px $color-shadow,
+                    -4px 4px 20px $color-shadow
+        z-index: 50

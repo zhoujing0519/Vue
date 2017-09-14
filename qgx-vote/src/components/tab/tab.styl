@@ -1,0 +1,53 @@
+@import "~common/stylus/variable"
+
+.tab
+    position: fixed
+    left: 0
+    bottom: 0
+    right: 0
+    display: flex
+    height: 50px
+    box-shadow: 0 0 10px $color-background-d
+    font-size: $font-size-small
+    line-height: 1
+    background: $color-background-f
+    .tab-item
+        flex: 1
+        text-align: center
+        height: 100%
+        padding-top: 7px
+        box-sizing: border-box
+        color: $color-theme
+        position: relative
+        &:not(:last-child)::after
+            content: ''
+            display: block
+            position: absolute
+            right: 0
+            top: 0
+            bottom: 0
+            width: 1px
+            height: 100%
+            transform: scaleY(.6)
+            background-color: $color-theme
+        .tab-icon
+            display: block
+            width: 20px
+            height: 20px
+            margin: 0 auto 5px
+            background-repeat: no-repeat
+            background-size: contain
+            background-position: center
+            &.tab-icon-home
+                background-image: url(home.png)
+            &.tab-icon-vote
+                background-image: url(vote.png)
+            &.tab-icon-rule
+                background-image: url(rule.png)
+            &.tab-icon-rank
+                background-image: url(rank.png)
+
+.slideup-enter-active, .slideup-leave-active
+    transition: .3s
+.slideup-enter, .slideup-leave-to
+    transform: translate3d(0, 100%, 0)

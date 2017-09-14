@@ -1,0 +1,60 @@
+@import '~common/stylus/variable'
+
+.rank
+    height: 100%
+    overflow: hidden
+    color: $color-theme
+    font-size: $font-size-medium
+    .rank-header
+        display: flex
+        .item
+            text-align: center
+            font-weight: bold
+            no-wrap()
+            &.item-rank
+                flex: 0 0 45px
+                width: 45px
+            &.item-num
+                flex: 0 0 70px
+                width: 70px
+            &.item-name
+                flex: 1
+            &.item-ticket
+                flex: 0 0 60px
+                width: 60px
+    .rank-container
+        height: 100%
+        overflow: hidden
+        .rank-list
+            .rank-list-item
+                display: flex
+                height: 35px
+                line-height: 35px
+                &:not(:last-child)
+                    border-bottom: 1px solid
+                .item
+                    text-align: center
+                    no-wrap()
+                    &.item-rank
+                        flex: 0 0 45px
+                        width: 45px
+                    &.item-num
+                        flex: 0 0 70px
+                        width: 70px
+                    &.item-name
+                        flex: 1
+                    &.item-ticket
+                        flex: 0 0 60px
+                        width: 60px
+                    &.icon
+                        height: 35px
+                        vertical-align: middle
+                        background-repeat: no-repeat
+                        background-position: center
+                        background-size: 50%
+                        &.icon0
+                            background-image: url(first.png)
+                        &.icon1
+                            background-image: url(second.png)
+                        &.icon2
+                            background-image: url(third.png)
