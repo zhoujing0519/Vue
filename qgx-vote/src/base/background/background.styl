@@ -16,9 +16,9 @@
         top: 20px
         left: 63px
         right: 63px
-        height: 52px
+        padding: 18px 0
         text-align: center
-        line-height: 52px
+        font-size: 0
         color: $color-theme
         font-size: $font-size-medium-x
         font-weight: bold
@@ -26,7 +26,22 @@
         border-radius: 6px
         box-shadow: 4px 10px 20px $color-shadow,
                     -4px 10px 20px $color-shadow
-        z-index: 60
+        z-index: 10
+        .icon
+            display: inline-block
+            vertical-align: top
+            width: 15px
+            height: 15px
+            background-image: url(title.png)
+            background-repeat: no-repeat
+            background-size: 100%
+            background-position: center
+        .text
+            display: inline-block
+            vertical-align: top
+            font-size: 15px
+            line-height: 1
+            font-weight: bold
     .container
         position: absolute
         left: 15px
@@ -39,4 +54,3 @@
         border-radius: 6px
         box-shadow: 4px 4px 20px $color-shadow,
                     -4px 4px 20px $color-shadow
-        z-index: 50

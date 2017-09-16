@@ -1,0 +1,25 @@
+@import "~common/stylus/variable"
+
+.searchbox
+    width: 100%
+    height: 35px
+    background: $color-background-f
+    border-radius: $border-radius-base
+    display: flex
+    .search-input
+        flex: 1
+        text-indent: 14px
+        font-size: $font-size-small
+        color: $color-theme
+        border: none
+        outline: none
+        &::placeholder
+            color: $color-theme
+    .icon-search
+        flex: 0 0 35px
+        width: 35px
+        height: 35px
+        background: url(icon-search.png)
+        background-repeat: no-repeat
+        background-position: center
+        background-size: 15px

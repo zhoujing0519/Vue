@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Hello from '@/components/Hello'
 
 import Home from '@/components/home/home'
+import Vote from '@/components/vote/vote'
+import VoteDetail from '@/components/vote-detail/vote-detail'
 import Rule from '@/components/rule/rule'
 import Rank from '@/components/rank/rank'
 
@@ -11,14 +12,19 @@ Vue.use(Router)
 export default new Router({
     routes: [
         {
-            path: '/',
-            name: 'Hello',
-            component: Hello
-        },
-        {
             path: '/home',
             name: 'Home',
             component: Home
+        },{
+            path: '/vote',
+            name: 'Vote',
+            component: Vote,
+            children: [
+                {
+                    path: ':id',
+                    component: VoteDetail
+                }
+            ],
         },
         {
             path: '/rule',
@@ -28,7 +34,16 @@ export default new Router({
         {
             path: '/rank',
             name: 'Rank',
-            component: Rank
-        }
+            component: Rank,
+            children: [
+                {
+                    path: ':id',
+                    component: VoteDetail
+                }
+            ],
+        },{
+            path: '/',
+            redirect: '/home'
+        },
     ]
 })

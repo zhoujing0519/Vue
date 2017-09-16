@@ -21,6 +21,26 @@ var autoOpenBrowser = !!config.dev.autoOpenBrowser
 var proxyTable = config.dev.proxyTable
 
 var app = express()
+
+/*Mock-读取数据*/
+
+var appData = require('../data.json');
+var works = appData.works;
+
+var apiRoutes = express.Router();
+
+apiRoutes.get('/works', function(req, res){
+    res.json({
+        errno: 0,
+        data: works
+    });
+});
+
+
+app.use('/api', apiRoutes);
+
+/*读取数据-Mock*/
+
 var compiler = webpack(webpackConfig)
 
 var devMiddleware = require('webpack-dev-middleware')(compiler, {

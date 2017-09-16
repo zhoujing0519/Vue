@@ -26,7 +26,7 @@
         props: {
             showFlag: {
                 type: Boolean,
-                default: true
+                default: false
             },
         }
     }

@@ -1,0 +1,81 @@
+@import "~common/stylus/variable"
+
+.vote
+    position: absolute
+    left: 0
+    top: 0
+    right: 0
+    bottom: 50px
+    overflow: hidden
+    .searchbox-wrapper
+        position: absolute
+        left: 15px
+        top: 15px
+        right: 15px
+    .vote-list-wrapper
+        position: absolute
+        left: 15px
+        top: 60px
+        right: 15px
+        bottom: 15px
+        overflow: hidden
+        .vote-list
+            &::after
+                content: ''
+                display: block
+                clear: both
+            .vote-item
+                float: left
+                width: calc(50% - 5px)
+                margin-bottom: 10px
+                padding: 5px
+                background-color: $color-background-f
+                border-radius: $border-radius-base
+                box-shadow: 2px 2px 10px $color-shadow
+                box-sizing: border-box
+                position: relative
+                &:nth-child(2n + 1)
+                    margin-right: 10px
+                .number
+                    position: absolute
+                    right: 12px
+                    top: 0
+                    width: 40px
+                    height: 25px
+                    background: url(icon-number.png)
+                    background-size: 100%
+                    text-align: center
+                    color: $color-text
+                    line-height: 25px
+                    font-size: $font-size-small
+                    z-index: 60
+                .poster-wrapper
+                    height: 0
+                    padding-top: 100%
+                    overflow: hidden
+                    box-sizing: border-box
+                    background-color: #333
+                    background-size: cover
+                    background-position: center
+                    background-repeat: no-repeat
+                    border-radius: $border-radius-base
+                    position: relative
+                    .name
+                        position: absolute
+                        left: 0
+                        bottom: 0
+                        right: 0
+                        font-size: $font-size-small
+                        color: $color-text
+                        background-color: $color-dark
+                        line-height: 2
+                        padding: 0 4px
+                    .poster
+                        max-width: 100%
+                .ticket-group
+                    font-size: $font-size-small
+                    color: $color-theme
+                    line-height: 1
+                    margin: 9px auto
+                    display: flex
+                    justify-content: space-between

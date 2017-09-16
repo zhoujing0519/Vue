@@ -1,0 +1,47 @@
+@import "~common/stylus/variable"
+
+.confirm
+    position: fixed
+    left: 0
+    top: 0
+    right: 0
+    bottom: 0
+    background: rgba(0, 0, 0, .7)
+    &.confirm-fade-enter-active
+        animation: confirm-fade .3s
+        .confirm-content
+            animation: zoom-in .3s
+    .confirm-wrapper
+        position: absolute
+        top: 50%
+        left: 50%
+        transform: translate(-50%, -50%)
+        z-index: 999
+        .confirm-content
+            width: 270px
+            border-radius: 13px
+            background: $color-highlight-background
+            padding-bottom: 10px
+            .title
+                text-align: center
+                line-height: 2
+                margin-bottom: 10px
+            .btn-group
+                display: flex
+                justify-content: space-around
+                .btn
+                    width: 40%
+
+@keyframes confirm-fade
+    0%
+        opacity: 0
+    100%
+        opacity: 1
+
+@keyframes zoom-in
+    0%
+        transform: scale(0)
+    50%
+        transform: scale(1.1)
+    100%
+        transform: scale(1)

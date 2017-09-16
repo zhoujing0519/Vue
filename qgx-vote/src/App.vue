@@ -19,6 +19,9 @@
                 showFlag: true,
             }
         },
+        created(){
+            this.showFlag = this.$route.name !== 'Home'
+        },
         updated(){
             this.showFlag = this.$route.name !== 'Home'
         },
