@@ -14,11 +14,16 @@
                     </span>
                 </div>
                 <div class="btn-group">
-                    <btn size="large" @select="showConfirm">为TA投票</btn>
+                    <btn size="large" :type="typeCls(work)" @select="showTip(work)">为TA投票</btn>
                     <btn size="large" type="stroke" @select="back">返回</btn>
                 </div>
-                <confirm @cancel="cancelVote" title="投票成功" ref="confirm"></confirm>
             </div>
+            <top-tip ref="topTip">
+                <p class="tip-title">
+                    <i class="iconfont icon-toupiao"></i>
+                    {{voteTip}}
+                </p>
+            </top-tip>
         </scroll>
     </transition>
 </template>
@@ -27,19 +32,24 @@
     import Btn from 'base/btn/btn'
     import Confirm from 'base/confirm/confirm'
     import Scroll from 'base/scroll/scroll'
+    import TopTip from 'base/top-tip/top-tip'
 
     import {mapGetters} from 'vuex'
+    import {voteMixin} from 'common/js/mixin'
 
     const padding = 15
 
     export default {
+        mixins: [voteMixin],
         data(){
             return {
                 scrollData: [],
+                voteStatus: 'fill',
             }
         },
         created(){
             this.scrollData.push(this.work)
+            this.voteStatus = this.work.voted ? 'disabled' : 'fill'
         },
         mounted(){
             setTimeout(() => {
@@ -56,18 +66,11 @@
             back(){
                 this.$router.back()
             },
-            showConfirm(){
-                console.log(this.work)
-                this.$refs.confirm.show();
-            },
-            cancelVote(){
-
-            },
         },
         components: {
-            Btn,
-            Confirm,
             Scroll,
+            Btn,
+            TopTip,
         }
     }
 </script>

@@ -1,6 +1,6 @@
 <template>
     <div class="searchbox">
-        <input class="search-input" type="text" v-model="query" :placeholder="placeholder">
+        <input class="search-input" type="text" v-model="query" :placeholder="placeholder" ref="query">
         <i class="icon-search"></i>
     </div>
 </template>
@@ -15,6 +15,11 @@
             placeholder: {
                 type: String,
                 default: ''
+            },
+        },
+        methods: {
+            blur(){
+                this.$refs.query.blur()
             },
         },
     }
