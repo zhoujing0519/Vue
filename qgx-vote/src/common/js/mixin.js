@@ -24,6 +24,7 @@ export const voteMixin = {
                 this.setVotedCount(this.votedCount + 1)
                 this.setVoteTip('投票成功，谢谢您的参与！')
                 this.$refs.topTip.show()
+                item.ticket++
                 item.voted = 1
             }
         },

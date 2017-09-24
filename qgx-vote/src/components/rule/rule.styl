@@ -1,0 +1,38 @@
+@import '~common/stylus/variable'
+
+.rule
+    position: absolute
+    left: 15px
+    top: 45px
+    right: 15px
+    bottom: 15px
+    font-size: $font-size-medium
+    color: $color-dark
+    overflow: hidden
+    .rule-list
+        .rule-item
+            &:not(:last-child)
+                margin-bottom: 1em
+            .rule-item-title
+                font-size: $font-size-medium
+                line-height: 19px
+                color: $color-theme
+                text-align: center
+                margin-bottom: 10px
+                &::after, &::before
+                    content: ''
+                    display: inline-block
+                    vertical-align: top
+                    width: 3px
+                    height: 3px
+                    margin: 8px .25em 0
+                    border-radius: 50%
+                    background: $color-theme
+            .rule-item-content
+                font-size: $font-size-small
+                line-height: 19px
+                &.center
+                    text-align: center
+                .rule-item-text
+                    &:not(:last-child)
+                        margin-bottom: .4em
