@@ -49,12 +49,13 @@
         },
         created(){
             this.scrollData.push(this.work)
+            if(!this.work.num) this.$router.back()
             this.voteStatus = this.work.voted ? 'disabled' : 'fill'
         },
         mounted(){
             setTimeout(() => {
-                this.$refs.poster.style.width = `${window.innerWidth - padding * 2}px`
-                this.$refs.detailScroll.refresh()
+                if(this.$refs.poster) this.$refs.poster.style.width = `${window.innerWidth - padding * 2}px`
+                if(this.$refs.detailScroll) this.$refs.detailScroll.refresh()
             }, 100)
         },
         computed: {
