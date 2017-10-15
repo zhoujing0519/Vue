@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {ERR_OK} from 'common/js/config'
+import {ERR_OK} from './config'
 
 export function getWorks(){
     const url = '/api/works'

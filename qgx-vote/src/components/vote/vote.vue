@@ -30,7 +30,7 @@
     </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
     import Btn from 'base/btn/btn'
     import Searchbox from 'base/searchbox/searchbox'
     import Scroll from 'base/scroll/scroll'
@@ -45,19 +45,21 @@
         mixins: [voteMixin],
         data(){
             return {
-                works: [],
                 beforeScroll: true,
             }
         },
         created(){
-            axios.get('/api/works').then(res => {
-                if(res.data.errno === ERR_OK){
-                    this.works = this._normalizeData(res.data.data)
-                }
-            })
-            .catch(err => {
-                alert('网络错误，无法获取数据！');
-            });
+            if(!this.works.length){
+                axios.get('/api/works').then(res => {
+                    if(res.data.errno === ERR_OK){
+                        let ret = res.data.data;
+                        this.setWorks(this._normalizeData(ret));
+                    }
+                })
+                .catch(err => {
+                    alert('网络错误，无法获取数据！');
+                });
+            }
         },
         methods: {
             selectItem(item){

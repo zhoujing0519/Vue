@@ -6,6 +6,7 @@ export const voteMixin = {
             'votedCount',
             'maxCount',
             'voteTip',
+            'works',
         ]),
     },
     methods: {
@@ -34,6 +35,7 @@ export const voteMixin = {
         ...mapMutations({
             setVotedCount: 'SET_VOTE_COUNT',
             setVoteTip: 'SET_VOTE_TIP',
+            setWorks: 'SET_WORKS',
         }),
     },
 }
